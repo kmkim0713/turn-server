@@ -22,11 +22,15 @@ coTURN 기반의 Docker 컨테이너 TURN 서버입니다. NAT/방화벽 환경�
 
 ```
 turn-server/
-├── Dockerfile            # Docker 빌드 설정
-└── turnserver.conf       # coTURN 설정 파일
+├── Dockerfile-local       # Local 환경 Docker 빌드 설정
+├── Dockerfile-dev         # Dev 환경 Docker 빌드 설정
+├── Dockerfile-prd         # Prd 환경 Docker 빌드 설정
+├── turnserver-local.conf  # Local 환경 coTURN 설정 파일
+├── turnserver-dev.conf    # Dev 환경 coTURN 설정 파일
+└── turnserver-prd.conf    # Prd 환경 coTURN 설정 파일
 ```
 
-## 설정 (`turnserver.conf`)
+## 설정 (turnserver.conf)
 
 | 항목 | 값 | 설명 |
 |------|-----|------|
@@ -42,23 +46,65 @@ turn-server/
 
 ## 실행 방법
 
-### Docker 빌드 및 실행
+### Local 환경
 
 ```bash
-docker build -t turn-server .
-docker run -d --name turn-server \
+# Docker 이미지 빌드
+docker build -t turn-server-local -f Dockerfile-local .
+
+# Docker 컨테이너 실행
+docker run -d --name turn-server-local \
   -p 3478:3478 -p 3478:3478/udp \
   -p 5349:5349 -p 5349:5349/udp \
-  turn-server
+  turn-server-local
+```
+
+### Dev 환경
+
+```bash
+# Docker 이미지 빌드
+docker build -t turn-server-dev -f Dockerfile-dev .
+
+# Docker 컨테이너 실행
+docker run -d --name turn-server-dev \
+  -p 3478:3478 -p 3478:3478/udp \
+  -p 5349:5349 -p 5349:5349/udp \
+  turn-server-dev
+```
+
+### Prd 환경
+
+```bash
+# Docker 이미지 빌드
+docker build -t turn-server-prd -f Dockerfile-prd .
+
+# Docker 컨테이너 실행
+docker run -d --name turn-server-prd \
+  -p 3478:3478 -p 3478:3478/udp \
+  -p 5349:5349 -p 5349:5349/udp \
+  turn-server-prd
 ```
 
 ### 컨테이너 관리
 
 ```bash
-docker stop turn-server     # 정지
-docker start turn-server    # 재시작
-docker rm turn-server       # 삭제
-docker logs turn-server     # 로그 확인
+# Local
+docker stop turn-server-local      # 정지
+docker start turn-server-local     # 재시작
+docker rm turn-server-local        # 삭제
+docker logs turn-server-local      # 로그 확인
+
+# Dev
+docker stop turn-server-dev        # 정지
+docker start turn-server-dev       # 재시작
+docker rm turn-server-dev          # 삭제
+docker logs turn-server-dev        # 로그 확인
+
+# Prd
+docker stop turn-server-prd        # 정지
+docker start turn-server-prd       # 재시작
+docker rm turn-server-prd          # 삭제
+docker logs turn-server-prd        # 로그 확인
 ```
 
 ## 클라이언트 연결 설정
